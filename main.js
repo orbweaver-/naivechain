@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path')
 var CryptoJS = require("crypto-js");
 var express = require("express");
 var bodyParser = require('body-parser');
@@ -34,14 +35,22 @@ var blockchain = [getGenesisBlock()];
 var initHttpServer = () => {
     var app = express();
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded())
+    app.engine('ejs', require('ejs').renderFile)
+    app.set('views', path.resolve(__dirname, 'client'))
+    app.set('view engine', 'ejs')
 
+    app.get('/', (req, res) => res.render('index', {
+      blocks: blockchain
+    }))
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
-    app.post('/mineBlock', (req, res) => {
+    app.post('/mine-block', (req, res) => {
+        if (!req.body.data || req.body.data.length === 0) return res.redirect('/')
         var newBlock = generateNextBlock(req.body.data);
         addBlock(newBlock);
         broadcast(responseLatestMsg());
         console.log('block added: ' + JSON.stringify(newBlock));
-        res.send();
+        res.redirect('/')
     });
     app.get('/peers', (req, res) => {
         res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));

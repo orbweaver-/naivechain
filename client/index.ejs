@@ -1,0 +1,26 @@
+<style>
+.block {
+  margin-top: 20px;
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>
+
+<h2>Add block</h2>
+<form action="/mine-block" method="post">
+  <b>Data:</b><br>
+  <input type="text" name="data" />
+  <br>
+  <input type="submit" />
+</form>
+
+<h2>Blocks</h2>
+<% blocks.forEach(function(block) { %>
+  <div class="block">
+    <b>Date:</b><%= block.timestamp %><br>
+    <b>Hash:</b><%= block.hash %><br>
+    <p>
+      <%= block.data %>
+    </p>
+  </div>
+<% }); %>
