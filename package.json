@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node main.js"
+    "start": "tsc testing.ts --lib es6 --outDir lib --target ES5 && node lib/testing.js"
   },
   "dependencies": {
     "@types/ejs": "^2.3.33",
@@ -15,8 +15,11 @@
     "crypto-js": "^3.1.6",
     "ejs": "^2.5.7",
     "express": "~4.11.1",
+    "fast-sha256": "^1.0.0",
     "lodash": "^4.17.4",
     "path": "^0.12.7",
+    "tweetnacl": "^1.0.0",
+    "tweetnacl-util": "^0.15.0",
     "ws": "^1.1.0"
   },
   "engines": {
