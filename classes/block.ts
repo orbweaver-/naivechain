@@ -1,4 +1,5 @@
-import { hash as sha256Hash } from 'tweetnacl'
+import { TextDecoder } from 'text-encoding'
+import sha256 from 'fast-sha256'
 import { encodeUTF8, decodeUTF8 } from 'tweetnacl-util'
 import { extend } from 'lodash'
 
@@ -27,7 +28,7 @@ export default class Block {
   }
 
   public static calculateHash(index: number, previousHash: string, timeStamp: number, data: string): string {
-    return encodeUTF8(sha256Hash(decodeUTF8(index + previousHash + timeStamp + data)))
+    return new TextDecoder('utf-8').decode(sha256(decodeUTF8(index + previousHash + timeStamp + data)))
   }
 
   public index: number
@@ -41,8 +42,11 @@ export default class Block {
     data: string,
     previousHash: string,
     timeStamp: number = new Date().getTime() / 1000,
-    hash: string = Block.calculateHash(index, previousHash, timeStamp, data)
+    hash: string = null
   ) {
+    if (!hash) {
+      hash = Block.calculateHash(index, previousHash, timeStamp, data)
+    }
     extend(this, { index, previousHash, timeStamp, data, hash })
   }
 }
